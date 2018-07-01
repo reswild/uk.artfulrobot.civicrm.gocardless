@@ -142,6 +142,7 @@ class CRM_GoCardlessUtils
 
     $interval_unit = $deets['interval_unit'];
     $interval = isset($deets['interval']) ? $deets['interval'] : 1;
+    $currency = isset($deets['currency']) ? $deets['currency'] : 'GBP';
 
     // Throw a spanner in the works if interval not supported by Go Cardless.
     // https://developer.gocardless.com/api-reference/#subscriptions-create-a-subscription
@@ -180,7 +181,7 @@ class CRM_GoCardlessUtils
     // "customer_bank_account": "BA123"
     $params = [
       'amount'        => (int) (100 * $deets['amount']), // Convert amount to pennies.
-      'currency'      => 'GBP',
+      'currency'      => $currency,
       'name'          => $deets['description'],
       'interval'      => $interval,
       'interval_unit' => $interval_unit, // yearly etc.
@@ -228,6 +229,7 @@ class CRM_GoCardlessUtils
         $interval_unit = $result['frequency_unit'];
         $interval = $result['frequency_interval'];
         $amount = $result['amount'];
+        $currency = $result['currency'];
 
         // Check if limited number of installments.
         if (!empty($result['installments'])) {
@@ -257,7 +259,8 @@ class CRM_GoCardlessUtils
       $params = [
           'interval' => $interval,
           'interval_unit' => $interval_unit . 'ly', // year -> yearly
-          'amount' => $amount
+          'amount' => $amount,
+          'currency' => $currency,
       ];
 
       if (isset($installments)) {
